@@ -15,11 +15,11 @@ def get_acl(file_path):
 def parse_acl(acl_string):
     acl_dict = {}
     acl_dict["file"] = re.search("# file: (.*)", acl_string).group(1)
-    acl_dict["owner"] = re.search("# owner:([wrx-]{3}).*([wrx-]{3})", acl_string).group(1)
-    acl_dict["group"] = re.search("# group:([wrx-]{3}).*([wrx-]{3})", acl_string).group(1)
-    acl_dict["user_permission"] = re.search("user::([wrx-]{3}).*([wrx-]{3})", acl_string).group(1)
-    acl_dict["group_permission"] = re.search("group::([wrx-]{3}).*([wrx-]{3})", acl_string).groups()
-    acl_dict["other_permission"] = re.search("other::([wrx-]{3}).*([wrx-]{3})", acl_string).group(1)
+    acl_dict["owner"] = re.search("# owner: (.*)", acl_string).group(1)
+    acl_dict["group"] = re.search("# group: (.*)", acl_string).group(1)
+    acl_dict["user_permission"] = re.search("user::([wrx-]{3}).*([wrx-]{3})|group::([wrx-]{3}).*([wrx-]{3})*", acl_string).groups()
+    acl_dict["group_permission"] = re.search("group::([wrx-]{3}).*([wrx-]{3})|group::([wrx-]{3}).*([wrx-]{3})*", acl_string).groups()
+    acl_dict["other_permission"] = re.search("other::([wrx-]{3}).*([wrx-]{3})|group::([wrx-]{3}).*([wrx-]{3})*", acl_string).groups()
     acl_dict["mask"] = re.search("mask::(.*)", acl_string).group(1)
 
     user_with_permission = re.findall("user:([\w\d]+.*)", acl_string)
