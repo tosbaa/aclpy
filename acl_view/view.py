@@ -2,8 +2,9 @@ import subprocess
 import re
 import sys
 import json
+import os
 
-TEST_FILE_PATH = "../testFile"
+FILE_PATH = sys.argv[2]
 PERMISSIONS_PATTERN = "%s([wrx-]{3}).*([wrx-]{3})|%s([wrx-]{3}).*([wrx-]{3})*"
 FILE_OWNER_GROUP = {"file" : "# file: ", "owner" : "# owner: " , "group" : "# group: "}
 PERMISSIONS_GROUP = {"user_permission" : "user::", "group_permission" : "group::", "other_permission" : "other::"}
@@ -75,9 +76,23 @@ def parse_acl(acl_string):
         acl_dict["default_groups"] = default_groups_list
     return json.dumps(acl_dict)
 
-print(parse_acl(get_acl(TEST_FILE_PATH)))
-#effective()
+def before():
+    if not os.path.exists(FILE_PATH):
+        print("Given path is not exist")
+        exit()
 
+def run():
+    print(parse_acl(get_acl(FILE_PATH)))
 
+def after():
+    print("ok")
 
     
+def automate():
+    before()
+    run()
+    after()
+
+if __name__ == "__main__":
+   globals()[sys.argv[1]]()
+
