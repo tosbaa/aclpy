@@ -50,12 +50,29 @@ def parse_acl(acl_string):
         if default_permissions is not None:
             acl_dict["default_%s" % role] = default_permissions.group(1) 
 
-    acl_dict["mask"] = re.search("mask::(.*)", acl_string).group(1)
+    mask_match = re.search("mask::(.*)", acl_string)
+    if mask_match is not None:
+        acl_dict["mask"] = mask_match.group(1)
 
-    
+    default_users = re.findall("default:user:([\d\w]+):", acl_string)
+    default_groups = re.findall("default:group:([\d\w]+):", acl_string)
 
+    default_users_list = []
+    default_groups_list = []
 
-    
+    for default_user in default_users:
+        default_user_permission = re.search("default:user:%s:([wrx-]+)" % default_user, acl_string)
+        if default_user_permission is not None:
+            default_users_list.append({default_user : default_user_permission.group(1)})        
+
+    acl_dict["default_users"] = default_users_list
+
+    for default_group in default_groups:
+        default_group_permission = re.search("default:group:%s:([wrx-]+)" % default_group, acl_string)
+        if default_group_permission is not None:
+            default_groups_list.append({default_group : default_group_permission.group(1)})
+
+    acl_dict["default_groups"] = default_groups_list
     return json.dumps(acl_dict)
 
 print(parse_acl(get_acl(TEST_FILE_PATH)))
