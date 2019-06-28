@@ -64,15 +64,15 @@ def parse_acl(acl_string):
         default_user_permission = re.search("default:user:%s:([wrx-]+)" % default_user, acl_string)
         if default_user_permission is not None:
             default_users_list.append({default_user : default_user_permission.group(1)})        
-
-    acl_dict["default_users"] = default_users_list
+    if default_users:
+        acl_dict["default_users"] = default_users_list 
 
     for default_group in default_groups:
         default_group_permission = re.search("default:group:%s:([wrx-]+)" % default_group, acl_string)
         if default_group_permission is not None:
             default_groups_list.append({default_group : default_group_permission.group(1)})
-
-    acl_dict["default_groups"] = default_groups_list
+    if default_groups:
+        acl_dict["default_groups"] = default_groups_list
     return json.dumps(acl_dict)
 
 print(parse_acl(get_acl(TEST_FILE_PATH)))
