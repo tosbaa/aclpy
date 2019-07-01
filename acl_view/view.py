@@ -1,3 +1,17 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# 1
+# ACL Bilgi
+# ACl bilgisini getirir
+# 1.0
+# dosya
+# string:file_path
+# 3
+# Yagiz Kocer
+# yagiz@gmail.com
+# Havelsan
+# get_acl
+
 import subprocess
 import re
 import sys
@@ -11,7 +25,7 @@ PERMISSIONS_GROUP = {"user_permission" : "user::", "group_permission" : "group::
 USERS_GROUPS_PATTERN = "%s:([wrx-]{3}).*([wrx-]{3})|%s:([wrx-]{3}).*([wrx-]{3})*" 
 
 def get_acl(file_path):
-    bash_script = "getfacl {:s}".format(file_path)
+    bash_script = "getfacl -p {:s}".format(file_path)
     bash_output = subprocess.Popen(bash_script, shell=True, stdout=subprocess.PIPE).stdout
     acl_string = bash_output.read().decode("utf-8")
     return acl_string
